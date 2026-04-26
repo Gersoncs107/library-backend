@@ -99,7 +99,10 @@ let books = [
 
 const typeDefs = /* GraphQL */ `
   type Query {
-    
+    bookCount: Int!
+    authorCount: Int!
+    allBooks: [Book!]!
+    allAuthors: [Author!]!
   }
 `
 
