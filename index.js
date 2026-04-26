@@ -97,9 +97,9 @@ let books = [
   you can remove the placeholder query once your first one has been implemented 
 */
 
-const typeDefs = `
+const typeDefs = /* GraphQL */ `
   type Query {
-    dummy: Int
+    
   }
 `
 
