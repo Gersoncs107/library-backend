@@ -110,6 +110,7 @@ const typeDefs = /* GraphQL */ `
     name: String!
     id: ID!
     born: Int
+    bookCount: Int!
   }
 
   type Query {
@@ -129,9 +130,12 @@ const resolvers = {
   },
 
   Author: {
+    name: (root) => root.name,
+    id: (root) => root.id,
+    born: (root) => root.born,
     bookCount: (root) => {
-      const authorBooks = books.filter(b => b.author === root.name)
-      return authorBooks.length
+      const authorName = root.name
+      return books.filter(book => book.author === authorName).length
     }
   }
 }
