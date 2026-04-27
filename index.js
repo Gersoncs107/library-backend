@@ -145,6 +145,10 @@ const resolvers = {
     author: (root) => root.author,
     id: (root) => root.id,
     genres: (root) => root.genres,
+    authorDetails: (root) => {
+      const authorName = root.author
+      return authors.find(author => author.name === authorName)
+    }
   }
 }
 
