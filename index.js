@@ -104,6 +104,7 @@ const typeDefs = /* GraphQL */ `
     author: String!
     id: ID!
     genres: [String!]!
+    authorDetails: Author!
   }
 
   type Author {
