@@ -104,7 +104,6 @@ const typeDefs = /* GraphQL */ `
     author: String!
     id: ID!
     genres: [String!]!
-    authorDetails: Author!
   }
 
   type Author {
@@ -145,11 +144,7 @@ const resolvers = {
     published: (root) => root.published,
     author: (root) => root.author,
     id: (root) => root.id,
-    genres: (root) => root.genres,
-    authorDetails: (root) => {
-      const authorName = root.author
-      return authors.find(author => author.name === authorName)
-    }
+    genres: (root) => root.genres
   }
 }
 
