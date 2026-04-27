@@ -137,6 +137,14 @@ const resolvers = {
       const authorName = root.name
       return books.filter(book => book.author === authorName).length
     }
+  },
+
+  Book: {
+    title: (root) => root.title,
+    published: (root) => root.published,
+    author: (root) => root.author,
+    id: (root) => root.id,
+    genres: (root) => root.genres,
   }
 }
 
