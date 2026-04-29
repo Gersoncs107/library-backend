@@ -129,7 +129,7 @@ const resolvers = {
       let filteredBooks = books
 
       if (args.author) {
-        filteredBooks = filteredBooks.filter(book => book.author === args.name)
+        filteredBooks = filteredBooks.filter(book => book.author === args.author)
       }
 
       if (args.genre) {
