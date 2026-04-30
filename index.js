@@ -166,6 +166,20 @@ const resolvers = {
     author: (root) => root.author,
     id: (root) => root.id,
     genres: (root) => root.genres
+  },
+
+  Mutation: {
+    addBook: (root, args) => {
+      const newBook = {
+        title: args.title,
+        published: args.published,
+        author: args.author,
+        id: args.id,
+        genres: args.genres
+      }
+      books.push(newBook)
+      return newBook
+    }
   }
 }
 
