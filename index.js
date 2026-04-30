@@ -179,6 +179,10 @@ const resolvers = {
       }
       books.push(newBook)
       return newBook
+    },
+
+    editAuthor: (root, args) => {
+
     }
   }
 }
