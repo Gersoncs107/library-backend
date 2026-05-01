@@ -191,7 +191,7 @@ const resolvers = {
       if (!author) {
         return null
       }
-      author.setBornTo = args.setBornTo
+author.born = args.setBornTo
       return author
     }
   }
