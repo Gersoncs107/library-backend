@@ -126,7 +126,12 @@ const typeDefs = /* GraphQL */ `
       author: String!
       published: Int!
       genres: [String!]!
-    ): Book      
+    ): Book  
+
+    editAuthor(
+      name: String!
+      born: Int!
+    ): Author    
   }
 `
 
