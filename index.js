@@ -130,7 +130,7 @@ const typeDefs = /* GraphQL */ `
 
     editAuthor(
       name: String!
-      setBorn: Int!
+      setBornTo: Int!
     ): Author    
   }
 `
