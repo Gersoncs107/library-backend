@@ -1,15 +1,7 @@
-const { v4: uuid } = require('uuid')
-const { ApolloServer } = require('@apollo/server')
-const { startStandaloneServer } = require('@apollo/server/standalone')
+require('dotenv').config()
 
+const startServer = require('./server')
 
-const server = new ApolloServer({
-  typeDefs,
-  resolvers,
-})
+const PORT = process.env.PORT || 4000
 
-startStandaloneServer(server, {
-  listen: { port: 4000 },
-}).then(({ url }) => {
-  console.log(`Server ready at ${url}`)
-})
+startServer(PORT)
