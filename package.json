@@ -12,6 +12,7 @@
   "description": "",
   "dependencies": {
     "@apollo/server": "^5.5.0",
+    "dotenv": "^17.4.2",
     "graphql": "^16.13.2"
   }
 }
