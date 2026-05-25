@@ -1,3 +1,5 @@
+const GraphQL = require('graphql')
+
 let authors = [
   {
     name: 'Robert Martin',
