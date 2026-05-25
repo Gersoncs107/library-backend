@@ -35,3 +35,4 @@ const typeDefs = /* GraphQL */ `
     ): Author    
   }
 `
+module.exports = typeDefs
