@@ -1,4 +1,6 @@
 const GraphQL = require('graphql')
+const Author = require('./models/author')
+const Book = require('./models/book')
 const {v4: uuid} = require('uuid')
 
 let authors = [
