@@ -1,3 +1,4 @@
+const { GraphQLError } = require('graphql')
 const Author = require('./models/author')
 const Book = require('./models/book')
 
@@ -46,32 +47,38 @@ const resolvers = {
       let author = await Author.findOne({ name: args.author })
 
       if (!author) {
-        author = new Author({ name: args.author })
-        await author.save()
+        try {
+          author = await new Author({ name: args.author }).save()
+        } catch (error) {
+          handleValidationError(error)
+        }
       }
 
-      const book = new Book({
-        title: args.title,
-        published: args.published,
-        author: author._id,
-        genres: args.genres,
-      })
-
       try {
-        await book.save()
+        const book = await new Book({
+          title: args.title,
+          published: args.published,
+          author: author._id,
+          genres: args.genres,
+        }).save()
+
+        return book.populate('author')
       } catch (error) {
         handleValidationError(error)
       }
-      return book.populate('author')
     },
 
     editAuthor: async (root, args) => {
-      const author = await Author.findOneAndUpdate(
-        { name: args.name },
-        { born: args.setBornTo },
-        { new: true }
-      )
-      return author // retorna null automaticamente se não encontrar
+      try {
+        const author = await Author.findOneAndUpdate(
+          { name: args.name },
+          { born: args.setBornTo },
+          { new: true, runValidators: true }
+        )
+        return author
+      } catch (error) {
+        handleValidationError(error)
+      }
     },
   },
 }
