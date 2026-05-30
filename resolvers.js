@@ -46,7 +46,11 @@ const resolvers = {
         genres: args.genres,
       })
 
-      await book.save()
+      try {
+        await book.save()
+      } catch (error) {
+        throw new Error('Failed to save book')
+      }
       return book.populate('author')
     },
 
