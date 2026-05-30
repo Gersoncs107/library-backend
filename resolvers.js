@@ -1,6 +1,17 @@
 const Author = require('./models/author')
 const Book = require('./models/book')
 
+const handleValidationError = (error) => {
+  if (error.name === 'ValidationError') {
+    throw new GraphQLError(error.message, {
+      extensions: { code: 'BAD_USER_INPUT' }
+    })
+  }
+  throw new GraphQLError('Saving failed', {
+    extensions: { code: 'INTERNAL_SERVER_ERROR' }
+  })
+}
+
 const resolvers = {
   Query: {
     bookCount: async () => Book.countDocuments(),
@@ -49,7 +60,7 @@ const resolvers = {
       try {
         await book.save()
       } catch (error) {
-        throw new Error('Failed to save book')
+        handleValidationError(error)
       }
       return book.populate('author')
     },
