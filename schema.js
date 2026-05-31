@@ -18,11 +18,11 @@ const typeDefs = /* GraphQL */ `
   username: String!
   favoriteGenre: String!
   id: ID!
-}
+  }
 
-type Token {
+  type Token {
   value: String!
-}
+  }
 
 
   type Query {
