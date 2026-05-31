@@ -13,6 +13,17 @@ const typeDefs = /* GraphQL */ `
     born: Int
     bookCount: Int!
   }
+  
+  type User {
+  username: String!
+  favoriteGenre: String!
+  id: ID!
+}
+
+type Token {
+  value: String!
+}
+
 
   type Query {
     bookCount: Int!
