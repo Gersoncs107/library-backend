@@ -8,7 +8,7 @@ const schema = new mongoose.Schema({
   },
   favoriteGenre: [
     {
-      type: mongoose.Schema.Types.ObjectId,
+      type: 'String',
       ref: 'Genre'
     }
   ],
