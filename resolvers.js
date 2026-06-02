@@ -94,6 +94,23 @@ const resolvers = {
         handleValidationError(error)
       }
     },
+
+    login: async (root, args) => {
+      const user = await User.findOne({ username: args.username })
+
+      if (!user || args.password !== 'secret') {
+        throw new GraphQLError('Invalid credentials', {
+          extensions: { code: 'UNAUTHORIZED' }
+        })
+      }
+
+      const token = jwt.sign(
+        { username: user.username, id: user._id },
+        process.env.JWT_SECRET
+      )
+
+      return { value: token }
+    }
   },
 }
 
