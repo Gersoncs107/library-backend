@@ -1,4 +1,5 @@
 const { GraphQLError } = require('graphql')
+const jwt = require('jsonwebtoken')
 const Author = require('./models/author')
 const Book = require('./models/book')
 
