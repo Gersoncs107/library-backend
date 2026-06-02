@@ -82,6 +82,18 @@ const resolvers = {
         handleValidationError(error)
       }
     },
+
+    createUser: async (root, args) => {
+      try {
+        const user = await new User({
+          username: args.username,
+          favoriteGenre: args.favoriteGenre,
+        }).save()
+        return user
+      } catch (error) {
+        handleValidationError(error)
+      }
+    },
   },
 }
 
