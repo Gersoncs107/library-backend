@@ -4,7 +4,7 @@ const jwt = require('jsonwebtoken')
 
 const resolvers = require('./resolvers')
 const typeDefs = require('./schema')
-
+const User = require('./models/User')
 
 const startServer = (port) => {
   const server = new ApolloServer({
