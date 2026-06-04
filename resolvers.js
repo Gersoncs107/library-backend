@@ -1,8 +1,8 @@
 const { GraphQLError } = require('graphql')
 const jwt = require('jsonwebtoken')
 const User = require('./models/User')
-const Author = require('./models/author')
-const Book = require('./models/book')
+const Author = require('./models/Author')
+const Book = require('./models/Book')
 
 const handleValidationError = (error) => {
   if (error.name === 'ValidationError') {
