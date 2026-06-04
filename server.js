@@ -1,8 +1,10 @@
 const { ApolloServer } = require('@apollo/server')
 const { startStandaloneServer } = require('@apollo/server/standalone')
+const jwt = require('jsonwebtoken')
 
 const resolvers = require('./resolvers')
 const typeDefs = require('./schema')
+
 
 const startServer = (port) => {
   const server = new ApolloServer({
