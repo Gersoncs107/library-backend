@@ -21,8 +21,8 @@ const startServer = (port) => {
     resolvers,
     context: async ({ req }) => {
       const auth = req.headers.authorization || ''
-      const user = await getUserFromAuthHeader(auth)
-      return { user }
+      const currentUser = await getUserFromAuthHeader(auth)
+      return { user: currentUser }
     }
   })
 
