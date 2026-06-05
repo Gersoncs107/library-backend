@@ -84,7 +84,9 @@ const resolvers = {
       }
     },
 
-    editAuthor: async (root, args) => {
+    editAuthor: async (root, args, context) => {
+      requireAuth(context)
+
       try {
         const author = await Author.findOneAndUpdate(
           { name: args.name },
