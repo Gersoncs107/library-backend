@@ -4,6 +4,14 @@ const User = require('./models/User')
 const Author = require('./models/Author')
 const Book = require('./models/Book')
 
+const requireAuth = (context) => {
+  if (!context.currentUser) {
+    throw new GraphQLError('Not authenticated', {
+      extensions: { code: 'UNAUTHENTICATED' }
+    })
+  }
+}
+
 const handleValidationError = (error) => {
   if (error.name === 'ValidationError') {
     throw new GraphQLError(error.message, {
