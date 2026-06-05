@@ -57,7 +57,9 @@ const resolvers = {
   },
 
   Mutation: {
-    addBook: async (root, args) => {
+    addBook: async (root, args, context) => {
+      requireAuth(context)
+
       let author = await Author.findOne({ name: args.author })
 
       if (!author) {
