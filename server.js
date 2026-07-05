@@ -1,3 +1,6 @@
+const { WebSocketServer } = require('ws')
+const { useServer } = require('graphql-ws/use/ws')
+
 const { ApolloServer } = require('@apollo/server')
 const { startStandaloneServer } = require('@apollo/server/standalone')
 
