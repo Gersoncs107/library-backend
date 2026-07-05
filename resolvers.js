@@ -6,6 +6,8 @@ const User = require('./models/User')
 const Author = require('./models/Author')
 const Book = require('./models/Book')
 
+const pubsub = new PubSub()
+
 const requireAuth = (context) => {
   if (!context.currentUser) {
     throw new GraphQLError('Not authenticated', {
@@ -133,7 +135,7 @@ const resolvers = {
   },
   Subscription: {
     bookAdded: {
-      subscribe: () => pubsub.asyncIterator('BOOK_ADDED'),
+      subscribe: () => pubsub.asyncIterableIterator('BOOK_ADDED'),
     },
   },
 }
