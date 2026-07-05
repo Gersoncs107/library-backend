@@ -131,6 +131,11 @@ const resolvers = {
       return { value: token }
     }
   },
+  Subscription: {
+    bookAdded: {
+      subscribe: () => pubsub.asyncIterator('BOOK_ADDED'),
+    },
+  },
 }
 
 module.exports = resolvers
