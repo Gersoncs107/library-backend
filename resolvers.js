@@ -80,7 +80,8 @@ const resolvers = {
           genres: args.genres,
         }).save()
 
-        return book.populate('author')
+        pubsub.publish('BOOK_ADDED', { bookAdded: book.populate('author') })
+        return book
       } catch (error) {
         handleValidationError(error)
       }
