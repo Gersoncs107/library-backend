@@ -35,10 +35,13 @@ const startServer = async (port) => {
   const app = express()
   const httpServer = http.createServer(app)
  
-  const server = new ApolloServer({
-    schema: makeExecutableSchema({ typeDefs, resolvers }),
-    plugins: [ApolloServerPluginDrainHttpServer({ httpServer })],
+  const wsServer = new WebSocketServer({
+    server: httpServer,
+    path: '/',
   })
+ 
+  const schema = makeExecutableSchema({ typeDefs, resolvers })
+  const serverCleanup = useServer({ schema }, wsServer)
  
   await server.start()
  
