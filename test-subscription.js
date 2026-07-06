@@ -10,7 +10,7 @@ const PORT = process.env.PORT || 4000
 const HTTP_URL = `http://localhost:${PORT}`
 const WS_URL = `ws://localhost:${PORT}`
 
-const USERNAME = 'gerson'
+const USERNAME = 'madruga'
 const PASSWORD = 'secret'
 const FAVORITE_GENRE = 'fiction'
 
