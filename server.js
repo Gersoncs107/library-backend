@@ -35,32 +35,32 @@ const startServer = async (port) => {
   const app = express()
   const httpServer = http.createServer(app)
 
-   const wsServer = new WebSocketServer({
+  const wsServer = new WebSocketServer({
     server: httpServer,
     path: '/',
   })
- 
+
   const schema = makeExecutableSchema({ typeDefs, resolvers })
   const serverCleanup = useServer({ schema }, wsServer)
- 
+
   const server = new ApolloServer({
-    schema, 
+    schema,
     plugins: [
       ApolloServerPluginDrainHttpServer({ httpServer }),
       {
         async serverWillStart() {
           return {
             async drainServer() {
-              await serverCleanup.dispose();
+              await serverCleanup.dispose()
             },
           }
         },
       },
     ],
   })
- 
+
   await server.start()
- 
+
   app.use(
     '/',
     cors(),
@@ -73,13 +73,32 @@ const startServer = async (port) => {
       },
     }),
   )
- 
+
   await new Promise((resolve, reject) => {
-    httpServer.listen(port, () => {
-      console.log(`Server is now running on http://localhost:${port}`)
-      resolve()
-    }).on('error', reject)
+    const tryListen = (candidatePort) => {
+      const onError = (error) => {
+        if (error.code === 'EADDRINUSE' && candidatePort !== 0) {
+          console.warn(`Port ${candidatePort} is busy, trying an available port...`)
+          httpServer.removeListener('error', onError)
+          tryListen(0)
+          return
+        }
+        reject(error)
+      }
+
+      httpServer.once('error', onError)
+      httpServer.listen(candidatePort, () => {
+        httpServer.removeListener('error', onError)
+        resolve()
+      })
+    }
+
+    tryListen(port)
   })
+
+  const address = httpServer.address()
+  console.log(`Server is now running on http://localhost:${address.port}`)
+  return address.port
 }
 
 module.exports = startServer

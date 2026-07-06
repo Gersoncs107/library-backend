@@ -7,8 +7,8 @@ const connectToDatabase = require('./db')
 const startServer = require('./server')
 
 const PORT = process.env.PORT || 4000
-const HTTP_URL = `http://localhost:${PORT}`
-const WS_URL = `ws://localhost:${PORT}`
+let HTTP_URL = `http://localhost:${PORT}`
+let WS_URL = `ws://localhost:${PORT}`
 
 const USERNAME = 'madruga'
 const PASSWORD = 'secret'
@@ -85,7 +85,9 @@ async function addBook(token, book) {
 async function main() {
   console.log('🔌 Conectando ao MongoDB e iniciando o servidor...')
   await connectToDatabase(process.env.MONGODB_URI)
-  await startServer(PORT)
+  const actualPort = await startServer(PORT)
+  HTTP_URL = `http://localhost:${actualPort}`
+  WS_URL = `ws://localhost:${actualPort}`
 
   await new Promise((resolve) => setTimeout(resolve, 1500))
 
