@@ -82,8 +82,9 @@ const resolvers = {
           genres: args.genres,
         }).save()
 
-        pubsub.publish('BOOK_ADDED', { bookAdded: book.populate('author') })
-        return book
+        const populatedBook = await Book.findById(book._id).populate('author')
+        await pubsub.publish('BOOK_ADDED', { bookAdded: populatedBook })
+        return populatedBook
       } catch (error) {
         handleValidationError(error)
       }

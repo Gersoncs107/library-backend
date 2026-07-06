@@ -1,18 +1,22 @@
+require('dotenv').config()
+
 const { createClient } = require('graphql-ws')
 const ws = require('ws')
-const fetch = require('node-fetch') // se Node < 18; em Node 18+ fetch já é global
 
-const HTTP_URL = 'http://localhost:4000'
-const WS_URL = 'ws://localhost:4000'
+const connectToDatabase = require('./db')
+const startServer = require('./server')
 
-// ---- Configurações: ajuste aqui ----
+const PORT = process.env.PORT || 4000
+const HTTP_URL = `http://localhost:${PORT}`
+const WS_URL = `ws://localhost:${PORT}`
+
 const USERNAME = 'gerson'
 const PASSWORD = 'secret'
-// -------------------------------------
+const FAVORITE_GENRE = 'fiction'
 
 async function graphqlRequest(query, variables = {}, token = null) {
   const headers = { 'Content-Type': 'application/json' }
-  if (token) headers['Authorization'] = `Bearer ${token}`
+  if (token) headers.Authorization = `Bearer ${token}`
 
   const response = await fetch(HTTP_URL, {
     method: 'POST',
@@ -25,7 +29,25 @@ async function graphqlRequest(query, variables = {}, token = null) {
     console.error('Erro GraphQL:', JSON.stringify(result.errors, null, 2))
     throw new Error('GraphQL request failed')
   }
+
   return result.data
+}
+
+async function createUser() {
+  try {
+    await graphqlRequest(
+      `mutation CreateUser($username: String!, $favoriteGenre: String!) {
+        createUser(username: $username, favoriteGenre: $favoriteGenre) {
+          id
+          username
+          favoriteGenre
+        }
+      }`,
+      { username: USERNAME, favoriteGenre: FAVORITE_GENRE }
+    )
+  } catch (error) {
+    console.log('Usuário já existe ou não pôde ser criado, continuando...')
+  }
 }
 
 async function login() {
@@ -37,58 +59,91 @@ async function login() {
     }`,
     { username: USERNAME, password: PASSWORD }
   )
+
   return data.login.value
 }
 
-async function addPerson(token, person) {
+async function addBook(token, book) {
   return graphqlRequest(
-    `mutation AddPerson($name: String!, $phone: String, $street: String!, $city: String!) {
-      addPerson(name: $name, phone: $phone, street: $street, city: $city) {
+    `mutation AddBook($title: String!, $author: String!, $published: Int!, $genres: [String!]!) {
+      addBook(title: $title, author: $author, published: $published, genres: $genres) {
         id
-        name
-        phone
+        title
+        published
+        author {
+          name
+          id
+        }
+        genres
       }
     }`,
-    person,
+    book,
     token
   )
 }
 
 async function main() {
-  // 1. Conecta na subscription
-  const client = createClient({ url: WS_URL, webSocketImpl: ws })
+  console.log('🔌 Conectando ao MongoDB e iniciando o servidor...')
+  await connectToDatabase(process.env.MONGODB_URI)
+  await startServer(PORT)
 
-  client.subscribe(
-    { query: 'subscription { personAdded { name phone } }' },
-    {
-      next: (data) => console.log('📨 Evento recebido:', JSON.stringify(data, null, 2)),
-      error: (err) => console.error('❌ Erro na subscription:', err),
-      complete: () => console.log('✅ Subscription completa'),
-    }
-  )
+  await new Promise((resolve) => setTimeout(resolve, 1500))
+
+  const client = createClient({
+    url: WS_URL,
+    webSocketImpl: ws,
+  })
+
+  const subscriptionPromise = new Promise((resolve, reject) => {
+    const subscription = client.subscribe(
+      {
+        query: `subscription {
+          bookAdded {
+            id
+            title
+            published
+            author {
+              name
+            }
+            genres
+          }
+        }`,
+      },
+      {
+        next: (data) => {
+          console.log('📨 Evento recebido:', JSON.stringify(data, null, 2))
+          resolve(data)
+        },
+        error: (err) => reject(err),
+        complete: () => console.log('✅ Subscription completa'),
+      }
+    )
+
+    subscription.then?.(() => {})
+  })
 
   console.log('👂 Escutando subscriptions...\n')
 
-  // 2. Espera um pouco para garantir que a subscription já conectou
-  await new Promise((resolve) => setTimeout(resolve, 1000))
+  console.log('🔑 Criando usuário de teste se necessário...')
+  await createUser()
 
-  // 3. Faz login
   console.log('🔑 Fazendo login...')
   const token = await login()
   console.log('✅ Token obtido\n')
 
-  // 4. Dispara a mutation addPerson
-  console.log('➕ Criando person...')
-  const result = await addPerson(token, {
-    name: 'Maria Silva',
-    phone: '040-1234567',
-    street: 'Rua das Flores',
-    city: 'Recife',
+  console.log('➕ Criando livro...')
+  const result = await addBook(token, {
+    title: `Livro Teste ${Date.now()}`,
+    author: 'J. R. R. Tolkien',
+    published: 1954,
+    genres: ['fantasy', 'adventure'],
   })
-  console.log('✅ Person criada:', result.addPerson)
 
-  console.log('\n⏳ Mantendo conexão aberta por 5s para garantir o recebimento do evento...')
-  await new Promise((resolve) => setTimeout(resolve, 5000))
+  console.log('✅ Livro criado:', result.addBook)
+
+  console.log('\n⏳ Aguardando o evento da subscription...')
+  await subscriptionPromise
+  await new Promise((resolve) => setTimeout(resolve, 2000))
   process.exit(0)
 }
 

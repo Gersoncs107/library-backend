@@ -74,9 +74,12 @@ const startServer = async (port) => {
     }),
   )
  
-  httpServer.listen(port, () =>
-    console.log(`Server is now running on http://localhost:${port}`),
-  )
+  await new Promise((resolve, reject) => {
+    httpServer.listen(port, () => {
+      console.log(`Server is now running on http://localhost:${port}`)
+      resolve()
+    }).on('error', reject)
+  })
 }
 
 module.exports = startServer
