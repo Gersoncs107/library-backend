@@ -135,7 +135,7 @@ async function main() {
 
   console.log('➕ Criando livro...')
   const result = await addBook(token, {
-    title: `Livro Teste ${Date.now()}`,
+    title: `The Hobbit  ${Date.now()}`,
     author: 'J. R. R. Tolkien',
     published: 1954,
     genres: ['fantasy', 'adventure'],
