@@ -49,16 +49,22 @@ const resolvers = {
     },
 
     allAuthors: async () => {
-      const bookCounts = await Book.aggregate([
-        { $group: { _id: '$author', count: { $sum: 1 } } }
-      ])
+    const bookCounts = await Book.aggregate([
+      { $group: { _id: '$author', count: { $sum: 1 } } }
+    ])
 
-      const authors = await Author.find({})
-      return authors.map(author => {
-        const bookCount = bookCounts.find(count => count._id.equals(author._id))
-        return { ...author.toObject(), bookCount: bookCount ? bookCount.count : 0 }
-      })
-    },
+    const countMap = bookCounts.reduce((map, entry) => {
+      map[entry._id.toString()] = entry.count
+      return map
+    }, {})
+
+    const authors = await Author.find({})
+
+    return authors.map(author => ({
+      ...author.toObject(),
+      bookCount: countMap[author._id.toString()] || 0
+    }))
+  },
 
     me: (root, args, context) => {
     return context.currentUser
