@@ -68,7 +68,7 @@ const resolvers = {
 
     me: (root, args, context) => {
     return context.currentUser
-  },
+    },
   },
 
   Author: {
