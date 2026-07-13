@@ -48,29 +48,16 @@ const resolvers = {
       return Book.find(query).populate('author')
     },
 
-    allAuthors: async () => {
-    const bookCounts = await Book.aggregate([
-      { $group: { _id: '$author', count: { $sum: 1 } } }
-    ])
-
-    const countMap = bookCounts.reduce((map, entry) => {
-      map[entry._id.toString()] = entry.count
-      return map
-    }, {})
-
-    const authors = await Author.find({})
-
-    return authors.map(author => ({
-      id: author._id.toString(),
-      name: author.name,
-      born: author.born,
-      bookCount: countMap[author._id.toString()] || 0
-    }))
-  },
+    allAuthors: async () => Author.find({}),
 
     me: (root, args, context) => {
     return context.currentUser
-    },
+  },
+  },
+
+  Author: {
+    bookCount: async (root) =>
+      Book.countDocuments({ author: root._id }),
   },
 
   Mutation: {
