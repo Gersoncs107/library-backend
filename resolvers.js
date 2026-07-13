@@ -48,7 +48,11 @@ const resolvers = {
       return Book.find(query).populate('author')
     },
 
-    allAuthors: async () => Author.find({}),
+    allAuthors: async () => {
+      const bookCounts = await Book.aggregate([
+        { $group: { _id: '$author', count: { $sum: 1 } } }
+      ])
+    },
 
     me: (root, args, context) => {
     return context.currentUser
