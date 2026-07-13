@@ -61,8 +61,7 @@ const resolvers = {
     const authors = await Author.find({})
 
     return authors.map(author => ({
-      id: author._id.toString(),   // ← id explícito
-      name: author.name,
+      id: author._id.toString(),
       born: author.born,
       bookCount: countMap[author._id.toString()] || 0
     }))
