@@ -52,6 +52,12 @@ const resolvers = {
       const bookCounts = await Book.aggregate([
         { $group: { _id: '$author', count: { $sum: 1 } } }
       ])
+
+      const authors = await Author.find({})
+      return authors.map(author => {
+        const bookCount = bookCounts.find(count => count._id.equals(author._id))
+        return { ...author.toObject(), bookCount: bookCount ? bookCount.count : 0 }
+      })
     },
 
     me: (root, args, context) => {
