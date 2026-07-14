@@ -32,6 +32,7 @@ const resolvers = {
     bookCount: async () => Book.countDocuments(),
     allAuthors: async () => {
     const bookCounts = await Book.aggregate([
+      {$match:  { author: { $ne: null } } },
       { $group: { _id: '$author', count: { $sum: 1 } } }
     ])
 
