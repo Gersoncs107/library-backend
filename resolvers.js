@@ -30,6 +30,7 @@ const handleValidationError = (error) => {
 const resolvers = {
   Query: {
     bookCount: async () => Book.countDocuments(),
+    authorCount: async () => Author.countDocuments(),
     allAuthors: async () => {
     const bookCounts = await Book.aggregate([
       {$match:  { author: { $ne: null } } },
