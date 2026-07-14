@@ -50,14 +50,8 @@ const resolvers = {
 
     me: (root, args, context) => {
     return context.currentUser
+    },
   },
-  },
-
-  Author: {
-    bookCount: async (root) =>
-      Book.countDocuments({ author: root._id }),
-  },
-
   Mutation: {
     addBook: async (root, args, context) => {
       requireAuth(context)
