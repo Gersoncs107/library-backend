@@ -31,6 +31,22 @@ const resolvers = {
   Query: {
     bookCount: async () => Book.countDocuments(),
     authorCount: async () => Author.countDocuments(),
+    allBooks: async (root, args) => {
+    let query = {}
+
+    if (args.author) {
+      const author = await Author.findOne({ name: args.author })
+      if (!author) return []
+      query.author = author._id
+    }
+
+    if (args.genre) {
+      query.genres = { $in: [args.genre] }
+    }
+
+    return Book.find(query).populate('author')
+  },
+
     allAuthors: async () => {
     const bookCounts = await Book.aggregate([
       {$match:  { author: { $ne: null } } },
