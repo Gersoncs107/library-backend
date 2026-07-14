@@ -30,25 +30,23 @@ const handleValidationError = (error) => {
 const resolvers = {
   Query: {
     bookCount: async () => Book.countDocuments(),
-    authorCount: async () => Author.countDocuments(),
+    allAuthors: async () => {
+    const bookCounts = await Book.aggregate([
+      { $group: { _id: '$author', count: { $sum: 1 } } }
+    ])
 
-    allBooks: async (root, args) => {
-      let query = {}
+    const countMap = bookCounts.reduce((map, entry) => {
+      map[entry._id.toString()] = entry.count
+      return map
+    }, {})
 
-      if (args.author) {
-        const author = await Author.findOne({ name: args.author })
-        if (!author) return []
-        query.author = author._id
-      }
+    const authors = await Author.find({})
 
-      if (args.genre) {
-        query.genres = { $in: [args.genre] }
-      }
-
-      return Book.find(query).populate('author')
-    },
-
-    allAuthors: async () => Author.find({}),
+    return authors.map(author => ({
+      ...author.toObject(),
+      bookCount: countMap[author._id.toString()] || 0
+    }))
+  },
 
     me: (root, args, context) => {
     return context.currentUser
