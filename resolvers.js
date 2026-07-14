@@ -31,47 +31,49 @@ const resolvers = {
   Query: {
     bookCount: async () => Book.countDocuments(),
     authorCount: async () => Author.countDocuments(),
+
     allBooks: async (root, args) => {
-    let query = {}
+      let query = {}
 
-    if (args.author) {
-      const author = await Author.findOne({ name: args.author })
-      if (!author) return []
-      query.author = author._id
-    }
+      if (args.author) {
+        const author = await Author.findOne({ name: args.author })
+        if (!author) return []
+        query.author = author._id
+      }
 
-    if (args.genre) {
-      query.genres = { $in: [args.genre] }
-    }
+      if (args.genre) {
+        query.genres = { $in: [args.genre] }
+      }
 
-    return Book.find(query).populate('author')
-  },
+      return Book.find(query).populate('author')
+    },
 
     allAuthors: async () => {
-    const bookCounts = await Book.aggregate([
-      {$match:  { author: { $ne: null } } },
-      { $group: { _id: '$author', count: { $sum: 1 } } }
-    ])
+      const bookCounts = await Book.aggregate([
+        { $match: { author: { $ne: null } } },
+        { $group: { _id: '$author', count: { $sum: 1 } } }
+      ])
 
-    const countMap = bookCounts.reduce((map, entry) => {
-      map[entry._id.toString()] = entry.count
-      return map
-    }, {})
+      const countMap = bookCounts.reduce((map, entry) => {
+        map[entry._id.toString()] = entry.count
+        return map
+      }, {})
 
-    const authors = await Author.find({})
+      const authors = await Author.find({})
 
-    return authors.map(author => ({
-      id: author._id.toString(),
-      name: author.name,
-      born: author.born,
-      bookCount: countMap[author._id.toString()] || 0
-    }))
-  },
+      return authors.map(author => ({
+        id: author._id.toString(),
+        name: author.name,
+        born: author.born,
+        bookCount: countMap[author._id.toString()] || 0
+      }))
+    },
 
     me: (root, args, context) => {
-    return context.currentUser
+      return context.currentUser
     },
   },
+
   Mutation: {
     addBook: async (root, args, context) => {
       requireAuth(context)
@@ -144,8 +146,9 @@ const resolvers = {
       )
 
       return { value: token }
-    }
+    },
   },
+
   Subscription: {
     bookAdded: {
       subscribe: () => pubsub.asyncIterableIterator('BOOK_ADDED'),
