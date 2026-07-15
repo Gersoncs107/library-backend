@@ -74,6 +74,18 @@ const resolvers = {
     },
   },
 
+  Author: {
+  bookCount: async (root) => {
+    if (root.bookCount !== undefined) {
+      return root.bookCount
+    }
+
+    return await Book.countDocuments({
+      author: root._id
+    })
+  }
+},
+
   Mutation: {
     addBook: async (root, args, context) => {
       requireAuth(context)
