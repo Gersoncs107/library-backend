@@ -46,7 +46,7 @@ async function createUser() {
       { username: USERNAME, favoriteGenre: FAVORITE_GENRE }
     )
   } catch (error) {
-    console.log('Usuário já existe ou não pôde ser criado, continuando...')
+    console.log('User already exists or could not be created, continuing...')
   }
 }
 
