@@ -143,7 +143,7 @@ async function main() {
 
   console.log('✅ Book created:', result.addBook)
 
-  console.log('\n⏳ Aguardando o evento da subscription...')
+  console.log('\n⏳ Waiting for subscription event...')
   await subscriptionPromise
   await new Promise((resolve) => setTimeout(resolve, 2000))
   process.exit(0)
