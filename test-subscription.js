@@ -129,7 +129,7 @@ async function main() {
   console.log('🔑 Creating test user if necessary...')
   await createUser()
 
-  console.log('🔑 Fazendo login...')
+  console.log('🔑 Logging in...')
   const token = await login()
   console.log('✅ Token obtido\n')
 
