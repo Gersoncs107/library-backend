@@ -133,7 +133,7 @@ async function main() {
   const token = await login()
   console.log('✅ Token acquired\n')
 
-  console.log('➕ Criando livro...')
+  console.log('➕ Creating book...')
   const result = await addBook(token, {
     title: `The Hobbit  ${Date.now()}`,
     author: 'J. R. R. Tolkien',
