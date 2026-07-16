@@ -117,7 +117,7 @@ async function main() {
           resolve(data)
         },
         error: (err) => reject(err),
-        complete: () => console.log('✅ Subscription completa'),
+        complete: () => console.log('✅ Subscription completed'),
       }
     )
 
