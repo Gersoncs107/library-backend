@@ -83,7 +83,7 @@ async function addBook(token, book) {
 }
 
 async function main() {
-  console.log('🔌 Conectando ao MongoDB e iniciando o servidor...')
+  console.log('🔌 Connecting to MongoDB and starting the server...')
   await connectToDatabase(process.env.MONGODB_URI)
   const actualPort = await startServer(PORT)
   HTTP_URL = `http://localhost:${actualPort}`
