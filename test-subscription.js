@@ -131,7 +131,7 @@ async function main() {
 
   console.log('🔑 Logging in...')
   const token = await login()
-  console.log('✅ Token obtido\n')
+  console.log('✅ Token acquired\n')
 
   console.log('➕ Criando livro...')
   const result = await addBook(token, {
