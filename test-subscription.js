@@ -124,7 +124,7 @@ async function main() {
     subscription.then?.(() => {})
   })
 
-  console.log('👂 Escutando subscriptions...\n')
+  console.log('👂 Listening for subscriptions...\n')
 
   console.log('🔑 Criando usuário de teste se necessário...')
   await createUser()
