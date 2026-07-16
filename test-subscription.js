@@ -113,7 +113,7 @@ async function main() {
       },
       {
         next: (data) => {
-          console.log('📨 Evento recebido:', JSON.stringify(data, null, 2))
+          console.log('📨 Event received:', JSON.stringify(data, null, 2))
           resolve(data)
         },
         error: (err) => reject(err),
