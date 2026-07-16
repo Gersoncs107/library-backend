@@ -141,7 +141,7 @@ async function main() {
     genres: ['fantasy', 'adventure'],
   })
 
-  console.log('✅ Livro criado:', result.addBook)
+  console.log('✅ Book created:', result.addBook)
 
   console.log('\n⏳ Aguardando o evento da subscription...')
   await subscriptionPromise
