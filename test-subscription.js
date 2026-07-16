@@ -126,7 +126,7 @@ async function main() {
 
   console.log('👂 Listening for subscriptions...\n')
 
-  console.log('🔑 Criando usuário de teste se necessário...')
+  console.log('🔑 Creating test user if necessary...')
   await createUser()
 
   console.log('🔑 Fazendo login...')
