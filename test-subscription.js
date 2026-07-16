@@ -26,7 +26,7 @@ async function graphqlRequest(query, variables = {}, token = null) {
 
   const result = await response.json()
   if (result.errors) {
-    console.error('Erro GraphQL:', JSON.stringify(result.errors, null, 2))
+    console.error('GraphQL error:', JSON.stringify(result.errors, null, 2))
     throw new Error('GraphQL request failed')
   }
 
