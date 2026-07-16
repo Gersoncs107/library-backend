@@ -150,6 +150,6 @@ async function main() {
 }
 
 main().catch((err) => {
-  console.error('Erro fatal:', err)
+  console.error('Fatal error:', err)
   process.exit(1)
 })
